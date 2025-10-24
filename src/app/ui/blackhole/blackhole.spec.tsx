@@ -1,7 +1,6 @@
 import { render, RenderResult, waitFor } from '@testing-library/react'
-import { assert, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, assert, beforeEach, describe, expect, it, vi } from 'vitest'
 import BlackholeClient from './blackhole-client'
-import { afterEach } from 'node:test'
 
 describe('Blackhole', () => {
   const defaultGetContext = HTMLCanvasElement.prototype.getContext
