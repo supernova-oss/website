@@ -1,20 +1,22 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { JSX, useEffect, useRef } from 'react'
 import { useWindowSize } from './window+size'
+import { unwrap } from '@/app/error-handling/result'
 
-export default function Blackhole() {
+export default function Blackhole(): JSX.Element {
   const windowSize = useWindowSize()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
-    const canvas = canvasRef.current
-    const context = canvas?.getContext('2d')
-    if (canvas == null || context == null) return
+    const [canvas, canvasError] = unwrap(canvasRef.current, 'canvasRef.current')
+    if (canvasError) throw canvasError
+    const [context, contextError] = unwrap(canvas.getContext('2d'), "canvas.getContext('2d')")
+    if (contextError) throw contextError
     canvas.width = windowSize.width
     canvas.height = windowSize.height
+    context.fillStyle = 'black'
     context.fillRect(0, 0, canvas.width, canvas.height)
-    context.fillStyle = 'white'
     return () => context.clearRect(0, 0, canvas.width, canvas.height)
-  }, [canvasRef, windowSize])
+  }, [windowSize, canvasRef])
   return <canvas ref={canvasRef} />
 }
